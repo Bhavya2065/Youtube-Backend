@@ -38,3 +38,14 @@ const videoSchema = new Schema({
 
 videoSchema.plugin(mongooseAggregatePaginate)
 export const Video = mongoose.model("Video", videoSchema);
+
+// =========================================================================
+// MONGOOSE VIDEO MODEL EXPLANATION
+// =========================================================================
+// 1. owner (Schema.Types.ObjectId):
+//    - Links each video to a specific User in the database using their ID.
+// 2. timestamps: true
+//    - Automatically adds 'createdAt' and 'updatedAt' date fields to each video.
+// 3. mongooseAggregatePaginate:
+//    - A plugin that helps us paginate (divide into pages) complex video listings 
+//      and search results when using aggregation pipelines.

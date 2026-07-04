@@ -5,7 +5,7 @@ import { handleOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { fullName, email, username, password } = req.body  
+    const { fullName, email, username, password } = req.body
 
     if ([fullName, email, username, password].some((field) => field.trim() === "")) {
         throw new ApiError(400, "All fields are Require")
@@ -19,9 +19,12 @@ const registerUser = asyncHandler(async (req, res) => {
         }
     }
 
+    // console.log(req.files); // {}
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path; // one more optional chaining bcz if the coverImage array not found then it will set undefine so the logic made is undefined[0] which crash the application immediately.
+    console.log(avatarLocalPath);
+    console.log(coverImageLocalPath);
+    
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar is must required")
     }
@@ -46,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
         "-password -refreshToken"
     )
 
-    if(!creaedUser){
+    if (!creaedUser) {
         throw new ApiError(400, "Something went wrong while creating new user")
     }
 

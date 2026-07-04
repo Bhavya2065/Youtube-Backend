@@ -5,12 +5,12 @@ import { handleOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { fullName, email, username, password } = req.body
+    const { fullName, email, username, password } = req.body  
 
     if ([fullName, email, username, password].some((field) => field.trim() === "")) {
         throw new ApiError(400, "All fields are Require")
     } else {
-        const existedUser = User.findOne({
+        const existedUser = await User.findOne({
             $or: [{ username }, { email }]
         })
 
@@ -19,7 +19,6 @@ const registerUser = asyncHandler(async (req, res) => {
         }
     }
 
-    console.log(req.files);
     const avatarLocalPath = req.files?.avatar[0]?.path;
     const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
@@ -33,9 +32,10 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!avatarCloudinaryPath) {
         throw new ApiError(400, "Avatar File is required")
     }
+
     const newUser = await User.create({
         fullName,
-        avatar: avatarCloudinaryPath.url,
+        avatar: avatarCloudinaryPath?.url,
         coverImage: coverImageCloudinaryPath?.url || "",
         email,
         username: username.toLowerCase(),
@@ -51,23 +51,24 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     return res.status(201).json(
-        new ApiResponse(200, creaedUser, "User Registered Successfully ||")
+        new ApiResponse(201, creaedUser, "User Registered Successfully ||")
     )
 
 })
 
 export { registerUser };
 
-
-// =============================================== //
-//                      steps
-// =============================================== //
-// get user details from frontend
-// validation - not empty
-// check if user already exists: username, email
-// check for images, check for avatar
-// upload them to cloudinary, avatar
-// create user object - create entry in db
-// remove password and refresh token field from response
-// check for user creation
-// return res
+// =========================================================================
+// REGISTER USER FLOW STEPS:
+// =========================================================================
+// 1. Get user details from frontend (req.body)
+// 2. Validate input fields (ensure no field is empty/missing)
+// 3. Check if username or email already exists in the database
+// 4. Retrieve local paths of uploaded files (avatar & cover image) from multer
+// 5. Ensure avatar file is provided
+// 6. Upload avatar and cover image files to Cloudinary
+// 7. Check if avatar was successfully uploaded to Cloudinary
+// 8. Create and save new user in database (hash password automatically via pre-hook)
+// 9. Fetch saved user object excluding password and refreshToken
+// 10. Check if user was successfully created
+// 11. Send success response back to frontend

@@ -13,10 +13,11 @@ const handleOnCloudinary = async (localFilePath) => {
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: 'auto'
         }) // after that file was upload successfully on cloudinary
-        console.log("file was upload successfully on cloudinary", response, response.url);
+        console.log("Cloudinary Upload Success -> File URL: ", response.url);
+        fs.unlinkSync(localFilePath) // we use unlinkSync because it is synchronous task means during this task the execution will be stopped after completion the other code is running.
         return response
     } catch (error) {
-        fs.unlink(localFilePath) // Remove the local saved temporary file
+        fs.unlinkSync(localFilePath) // Remove the local saved temporary file
     }
 }
 

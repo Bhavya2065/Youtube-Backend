@@ -4,13 +4,9 @@ import { User } from '../models/user.model.js';
 import { handleOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-
 const registerUser = asyncHandler(async (req, res) => {
     const { fullName, email, username, password } = req.body
-    // console.log("Email: ", email);
-    // if(fullName === ""){
-    //     throw new ApiError(400, "Password is Empty")
-    // }
+
     if ([fullName, email, username, password].some((field) => field.trim() === "")) {
         throw new ApiError(400, "All fields are Require")
     } else {

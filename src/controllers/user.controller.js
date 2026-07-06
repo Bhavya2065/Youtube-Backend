@@ -10,6 +10,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if ([fullName, email, username, password].some((field) => field.trim() === "")) {
         throw new ApiError(400, "All fields are Require")
     } else {
+        // Returns user object if found, or null if not found
         const existedUser = await User.findOne({
             $or: [{ username }, { email }]
         })
@@ -19,12 +20,9 @@ const registerUser = asyncHandler(async (req, res) => {
         }
     }
 
-    // console.log(req.files); // {}
     const avatarLocalPath = req.files?.avatar[0]?.path;
     const coverImageLocalPath = req.files?.coverImage?.[0]?.path; // one more optional chaining bcz if the coverImage array not found then it will set undefine so the logic made is undefined[0] which crash the application immediately.
-    console.log(avatarLocalPath);
-    console.log(coverImageLocalPath);
-    
+
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar is must required")
     }
@@ -59,7 +57,101 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+
+    const { username, email, password } = req.body
+
+    if (!username && !email) {
+        throw new ApiError(400, "Username or Email are required")
+    }
+    const user = await User.findOne({
+        $or: [{ username }, { email }]
+    })
+
+    console.log(`User Object is: ${user}`);
+
+    if (!user) {
+        throw new ApiError(400, "The User is not Exist in Record")
+    }
+
+    if (!password) {
+        throw new ApiError(400, "Password is required")
+    } else {
+        const isPasswordValid = await user.isPasswordCorrect(password);
+        if (!isPasswordValid) {
+            throw new ApiError(400, "Incorrect Password");
+        }
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+    const currentUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    );
+
+    // A simple example of the options object used to secure a cookie
+    const cookieOptions = {
+        httpOnly: true,      // Prevents JavaScript access (blocks XSS)
+        secure: true,        // Requires HTTPS connection
+        // sameSite: 'strict',  // Blocks cross-site requests (prevents CSRF)
+        // signed: true,        // Cryptographically signs the cookie
+        // maxAge: 3600000      // Expires in 1 hour
+    };
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .json(
+            new ApiResponse(200, { user: currentUser, accessToken, refreshToken }, "User LoggedIn successfully!!")
+        )
+})
+
+const logoutUser = asyncHandler(async (req, res) => {
+    // 1. We set refreshToken to undefined to clear its value.
+    // 2. { new: true } tells Mongoose to return the updated user document instead of the old one. In old one the refreshToken is exist, So it may be create the issue
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: { refreshToken: undefined }
+        },
+        {
+            new: true
+        }
+    )
+
+    const cookieOptions = {
+        httpOnly: true,      // Prevents JavaScript access (blocks XSS)
+        secure: true,        // Requires HTTPS connection
+    };
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(
+        new ApiResponse(200, {}, "User Logged Out Successfully") 
+    )
+})
+
+const generateAccessAndRefreshToken = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        // Save it in  DB here!
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false })
+
+        return { accessToken, refreshToken };
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating refresh and access token")
+    }
+}
+
+export { registerUser, loginUser, logoutUser };
 
 // =========================================================================
 // REGISTER USER FLOW STEPS:
@@ -75,3 +167,28 @@ export { registerUser };
 // 9. Fetch saved user object excluding password and refreshToken
 // 10. Check if user was successfully created
 // 11. Send success response back to frontend
+
+
+// =========================================================================
+// LOGIN USER FLOW STEPS:
+// =========================================================================
+// 1. Get username and password click login
+// 2. Validate input fields (ensure no field is empty/missing)
+// 3. validate username and password and find that user that have already exist
+// 4. genearte the access token and refresh token
+// 5. store refresh token in db and access token in http-only coockies
+
+// =========================================================================
+// IMPORTANT NOTE: COOKIE SECURITY & CONTROL
+// =========================================================================
+// Cookies are fully editable by the end user. Because cookies are stored
+// on the client side (in the user's browser), the user has complete control
+// over them. Anyone can view, modify, or delete their cookies at any time.
+
+// =========================================================================
+// IMPORTANT NOTE: THROWING ERRORS VS RETURNING SUCCESS RESPONSES
+// =========================================================================
+// 1. We use "throw" for errors (like ApiError) to instantly stop the code
+//    execution and send the error to Express's error handler.
+// 2. We do NOT use "throw" for success (like ApiResponse). Instead, we
+//    simply "return" the response because everything worked correctly.

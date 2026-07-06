@@ -22,7 +22,10 @@ app.use("/api/v1/users", userRouter)
 export default app
 
 /*
-================ NOTES ================
+// =========================================================================
+// IMPORTANT NOTE: 
+// =========================================================================
+
 1. cors(): Middleware to allow requests from different origins (like your frontend).
 2. express.json(): Middleware to parse incoming requests with JSON data.
 3. express.urlencoded(): Converts URL-encoded form data (like name=John&age=25) into a JavaScript object in req.body.

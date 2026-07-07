@@ -58,7 +58,6 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 const loginUser = asyncHandler(async (req, res) => {
-    console.log(req.body)
     const { username, email, password } = req.body
 
     if (!username && !email) {
@@ -67,8 +66,6 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({
         $or: [{ username }, { email }]
     })
-
-    console.log(`User Object is: ${user}`);
 
     if (!user) {
         throw new ApiError(400, "The User is not Exist in Record")
@@ -147,7 +144,7 @@ const generateAccessAndRefreshToken = async (userId) => {
         return { accessToken, refreshToken };
 
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating refresh and access token")
+        throw new ApiError(500, error?.message || "Something went wrong while generating refresh and access token")
     }
 }
 

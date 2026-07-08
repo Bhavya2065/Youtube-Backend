@@ -27,5 +27,11 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 // =========================================================================
 // IMPORTANT NOTE: About Middleware
 // =========================================================================
-// Whenever you add middleware You must have to take three parameters : req, res and next also
-// It ensures that the logic are completed.
+// 1. Why verifyJWT middleware is used:
+//    - It checks if a user is logged in.
+//    - It verifies the access token (JWT) from cookies or request headers.
+//    - It gets user details and saves them in req.user so other routes can use them.
+//
+// 2. How middleware works:
+//    - You must use three parameters: req, res, and next.
+//    - You must call next() to pass control to the next function.

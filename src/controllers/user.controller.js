@@ -179,6 +179,115 @@ const refreshAcessToken = asyncHandler(async (req, res) => {
     }
 })
 
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    // step 1
+    const { oldPassword, newPassword } = req.body
+    const user = User.findById(req?.user._id);
+    if (!user) {
+        throw new ApiError(401, "Unauthorize Access");
+    }
+
+    // step 2
+    if (!await user.isPasswordCorrect(oldPassword)) {
+        throw new ApiError(401, "Old Password does not match")
+    }
+
+    // step 3
+    user.password = newPassword; // set new password
+    await user.save({ validateBeforeSave: false })
+
+    // step 4
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Password Changed Successfully"))
+})
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, req.user, "Current user fetched successfully"))
+})
+
+const updateAccountDeytails = asyncHandler(async (req, res) => {
+    // step 1
+    const { fullName, email } = req.body
+    if (!(fullName || email)) {
+        throw new ApiError(401, "Fullname or Email are not exist")
+    }
+
+    // step 2
+    const user = await User.findByIdAndUpdate(
+        req?.user._id,
+        {
+            $set: { fullName, email } // we use js shorthand property like {fullname: fullName}
+        },
+        { new: true }
+    ).select("-password")
+
+    // step 3
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "Account details Updated Successfully"))
+})
+
+const updateUserAvatar = asyncHandler(async (req, res) => {
+    const avatarLocalPath = req.file?.path
+    if (!avatarLocalPath) {
+        throw new ApiError(401, "Avatar Not Found")
+    }
+
+    const avatar = await handleOnCloudinary(avatarLocalPath)
+
+    if (!avatar?.url) {
+        throw new ApiError(401, "Error while uploading on Avatar")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req?.user._id,
+        {
+            $set: { avatar: avatar.url }
+        },
+        {
+            new: true
+        }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200, user, "Avatar Updated successfully"
+    ))
+})
+
+const updateUserCoverImage = asyncHandler(async (req, res) => {
+    const coverImageLocalPath = req.file?.path
+    if (!coverImageLocalPath) {
+        throw new ApiError(401, "coverImage Not Found")
+    }
+
+    const coverImage = await handleOnCloudinary(coverImageLocalPath)
+
+    if (!coverImage?.url) {
+        throw new ApiError(401, "Error while uploading on coverImage")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req?.user._id,
+        {
+            $set: { coverImage: coverImage.url || "" }
+        },
+        {
+            new: true
+        }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200, user, "coverImage Updated successfully"
+    ))
+})
+
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
@@ -196,7 +305,18 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
-export { registerUser, loginUser, logoutUser, refreshAcessToken };
+
+export { 
+    registerUser, 
+    loginUser, 
+    logoutUser, 
+    refreshAcessToken, 
+    changeCurrentPassword, 
+    getCurrentUser, 
+    updateAccountDeytails, 
+    updateUserAvatar,
+    updateUserCoverImage
+};
 
 // =========================================================================
 // REGISTER USER FLOW STEPS:

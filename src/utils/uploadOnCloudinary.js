@@ -7,13 +7,13 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 })
 
-const handleOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(!localFilePath) return null
+        if (!localFilePath) return null
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: 'auto'
         }) // after that file was upload successfully on cloudinary
-        console.log("Cloudinary Upload Success -> File URL: ", response.url);
+        console.log("Cloudinary Upload Success -> File URL: ", response);
         fs.unlinkSync(localFilePath) // we use unlinkSync because it is synchronous task means during this task the execution will be stopped after completion the other code is running.
         return response
     } catch (error) {
@@ -21,4 +21,4 @@ const handleOnCloudinary = async (localFilePath) => {
     }
 }
 
-export {handleOnCloudinary};
+export { uploadOnCloudinary };

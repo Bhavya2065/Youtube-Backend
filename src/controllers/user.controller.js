@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from '../models/user.model.js';
-import { handleOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken'
 
@@ -28,8 +28,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar is must required")
     }
 
-    const avatarCloudinaryPath = await handleOnCloudinary(avatarLocalPath)
-    const coverImageCloudinaryPath = await handleOnCloudinary(coverImageLocalPath)
+    const avatarCloudinaryPath = await uploadOnCloudinary(avatarLocalPath)
+    const coverImageCloudinaryPath = await uploadOnCloudinary(coverImageLocalPath)
 
     if (!avatarCloudinaryPath) {
         throw new ApiError(400, "Avatar File is required")
@@ -182,7 +182,7 @@ const refreshAcessToken = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     // step 1
     const { oldPassword, newPassword } = req.body
-    const user = User.findById(req?.user._id);
+    const user = await User.findById(req?.user._id);
     if (!user) {
         throw new ApiError(401, "Unauthorize Access");
     }
@@ -208,11 +208,11 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, req.user, "Current user fetched successfully"))
 })
 
-const updateAccountDeytails = asyncHandler(async (req, res) => {
+const updateAccountDetails = asyncHandler(async (req, res) => {
     // step 1
     const { fullName, email } = req.body
     if (!(fullName || email)) {
-        throw new ApiError(401, "Fullname or Email are not exist")
+        throw new ApiError(400, "Fullname or Email are not exist")
     }
 
     // step 2
@@ -233,13 +233,13 @@ const updateAccountDeytails = asyncHandler(async (req, res) => {
 const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
     if (!avatarLocalPath) {
-        throw new ApiError(401, "Avatar Not Found")
+        throw new ApiError(400, "Avatar Not Found")
     }
 
-    const avatar = await handleOnCloudinary(avatarLocalPath)
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
 
     if (!avatar?.url) {
-        throw new ApiError(401, "Error while uploading on Avatar")
+        throw new ApiError(400, "Error while uploading on Avatar")
     }
 
     const user = await User.findByIdAndUpdate(
@@ -253,22 +253,22 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     ).select("-password")
 
     return res
-    .status(200)
-    .json(new ApiResponse(
-        200, user, "Avatar Updated successfully"
-    ))
+        .status(200)
+        .json(new ApiResponse(
+            200, user, "Avatar Updated successfully"
+        ))
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
     const coverImageLocalPath = req.file?.path
     if (!coverImageLocalPath) {
-        throw new ApiError(401, "coverImage Not Found")
+        throw new ApiError(400, "coverImage Not Found")
     }
 
-    const coverImage = await handleOnCloudinary(coverImageLocalPath)
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if (!coverImage?.url) {
-        throw new ApiError(401, "Error while uploading on coverImage")
+        throw new ApiError(400, "Error while uploading on coverImage")
     }
 
     const user = await User.findByIdAndUpdate(
@@ -282,10 +282,10 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     ).select("-password")
 
     return res
-    .status(200)
-    .json(new ApiResponse(
-        200, user, "coverImage Updated successfully"
-    ))
+        .status(200)
+        .json(new ApiResponse(
+            200, user, "coverImage Updated successfully"
+        ))
 })
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -306,14 +306,14 @@ const generateAccessAndRefreshToken = async (userId) => {
 }
 
 
-export { 
-    registerUser, 
-    loginUser, 
-    logoutUser, 
-    refreshAcessToken, 
-    changeCurrentPassword, 
-    getCurrentUser, 
-    updateAccountDeytails, 
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    refreshAcessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
     updateUserAvatar,
     updateUserCoverImage
 };

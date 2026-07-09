@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from '../models/user.model.js';
 import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
+import { deleteOnCloudinary } from '../utils/deleteOnCloudinary.js'
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken'
 
@@ -148,7 +149,6 @@ const refreshAcessToken = asyncHandler(async (req, res) => {
     try {
         // step 2
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
-        console.log(decodedToken);
         const user = await User.findById(decodedToken?._id)
         if (!user) {
             throw new ApiError(401, "Invalid RefreshToken");
@@ -232,6 +232,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
+
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar Not Found")
     }
@@ -242,6 +243,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error while uploading on Avatar")
     }
 
+    const userId = await User.findById(req?.user?._id);
+
     const user = await User.findByIdAndUpdate(
         req?.user._id,
         {
@@ -250,7 +253,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         {
             new: true
         }
-    ).select("-password")
+    ).select("-password");
+
+    await deleteOnCloudinary(userId.avatar)
 
     return res
         .status(200)

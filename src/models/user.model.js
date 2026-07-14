@@ -31,7 +31,7 @@ const userSchema = new Schema({
     coverImage: {
         type: String // We use cloudnary url which store our images and give the url of that image for access
     },
-    whatchHistory: [
+    watchHistory: [
         {
             type: Schema.Types.ObjectId,
             ref: "Video"

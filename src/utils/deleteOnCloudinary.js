@@ -12,11 +12,10 @@ const deleteOnCloudinary = async (avatarPath) => {
         if (!avatarPath) return;
         const arr = avatarPath.split("/");
         const public_id = arr[arr.length - 1].split(".")[0]
-        console.log(public_id);
         const response = await cloudinary.uploader.destroy(
             public_id
         )
-        console.log(`The Delete operation successfully performed ${response}`);
+        console.log("The Delete operation successfully performed on Cloudinary ", response);
         return response;
     } catch (error) {
         throw new ApiError(400, "Error while deleting the assets from Cloudinary");

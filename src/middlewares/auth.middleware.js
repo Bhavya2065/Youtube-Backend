@@ -12,7 +12,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
             throw new ApiError(401, "Unauthorize Access");
         }
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        console.log("Decoded Token is: ", decodedToken);
         /* 
            decodedToken stores the payload of the JWT access token, which includes:
            - _id: MongoDB User ID

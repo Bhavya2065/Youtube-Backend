@@ -354,7 +354,6 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         }
     ])
 
-    console.log("Aggregation Output is: ", channel);
     if (!channel?.length) {
         throw new ApiError(400, "Channel does not Exist!")
     }

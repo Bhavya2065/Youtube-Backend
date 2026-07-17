@@ -18,7 +18,7 @@ const videoSchema = new Schema({
         type: String,
         required: true
     },
-    discription: {
+    description: {
         type: String,
         required: true
     },
@@ -48,4 +48,4 @@ export const Video = mongoose.model("Video", videoSchema);
 //    - Automatically adds 'createdAt' and 'updatedAt' date fields to each video.
 // 3. mongooseAggregatePaginate:
 //    - A plugin that helps us paginate (divide into pages) complex video listings 
-//      and search results when using aggregation pipelines.
+//      and search results when using aggregation pipelines.

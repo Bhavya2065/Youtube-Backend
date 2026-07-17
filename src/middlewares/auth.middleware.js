@@ -12,6 +12,17 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
             throw new ApiError(401, "Unauthorize Access");
         }
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        console.log("Decoded Token is: ", decodedToken);
+        /* 
+           decodedToken stores the payload of the JWT access token, which includes:
+           - _id: MongoDB User ID
+           - email: User's email
+           - username: User's username
+           - fullName: User's full name
+           - iat: Issued-at timestamp (when token was created)
+           - exp: Expiry timestamp (when token expires)
+        */
+        
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
         if(!user){
             throw new ApiError(401, "Invalid access Token");

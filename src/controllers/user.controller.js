@@ -244,10 +244,10 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error while uploading on Avatar")
     }
 
-    const userId = await User.findById(req?.user?._id);
+    const userId = await User.findById(req.user?._id);
 
     const user = await User.findByIdAndUpdate(
-        req?.user._id,
+        req.user?._id,
         {
             $set: { avatar: avatar.url }
         },

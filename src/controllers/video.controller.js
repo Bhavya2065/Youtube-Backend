@@ -51,26 +51,28 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
 const watchVideo = asyncHandler(async (req, res) => {
     const videoId = req.params.id?.trim();
-    console.log(videoId);
 
     if (!videoId) {
         throw new ApiError(400, "video id or user not found");
     }
+
+    await User.findByIdAndUpdate(req.user?._id, {
+        $pull: {
+            watchHistory: videoId
+        }
+    });
 
     const user = await User.findByIdAndUpdate(req.user?._id, {
         $push: {
             watchHistory: videoId
         }
     }, { new: true }).select("-password -refreshToken");
-    console.log(user);
 
     const video = await Video.findByIdAndUpdate(videoId, {
         $inc: {
             views: 1
         }
     }, { new: true }).select("_id views");
-    console.log(video);
-
 
     if (!user) {
         throw new ApiError(400, "User Watch History not Update");

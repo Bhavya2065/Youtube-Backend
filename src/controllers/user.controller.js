@@ -256,7 +256,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         }
     ).select("-password");
 
-    await deleteOnCloudinary(userId.avatar)
+    await deleteOnCloudinary(userId.avatar, "image")
 
     return res
         .status(200)

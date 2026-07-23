@@ -7,13 +7,13 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 })
 
-const deleteOnCloudinary = async (avatarPath) => {
+const deleteOnCloudinary = async (avatarPath, resource_type) => {
     try {
         if (!avatarPath) return;
         const arr = avatarPath.split("/");
         const public_id = arr[arr.length - 1].split(".")[0]
         const response = await cloudinary.uploader.destroy(
-            public_id
+            public_id, { resource_type }
         )
         console.log("The Delete operation successfully performed on Cloudinary ", response);
         return response;

@@ -16,8 +16,8 @@ router.route("/upload-video").post(verifyJWT, upload.fields([
     }
 ]), uploadVideo);
 router.route("/watch/:id").get(verifyJWT, watchVideo);
-router.route("/update-video/:id").post(verifyJWT, upload.single('thumbnail'), editVideoDetail);
+router.route("/update-video/:id").patch(verifyJWT, upload.single('thumbnail'), editVideoDetail);
 router.route("/search-query/:query").get(verifyJWT, searchVideo);
-router.route("/delete-video/:id").get(verifyJWT, deleteVideo);
+router.route("/delete-video/:id").delete(verifyJWT, deleteVideo);
 
 export default router;

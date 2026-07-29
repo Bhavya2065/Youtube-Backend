@@ -191,14 +191,14 @@ const deleteVideo = asyncHandler(async (req, res) => {
         }
     })
 
-    const video = await Video.findById(videoId);
-    console.log(video.videoFile);
-    console.log(video.thumbnail);
+    const video = await Video.findOneAndDelete({_id: videoId});
+
+    if(!video){
+        throw new ApiError(400, "Video not be deleted, Something went wrong");
+    }
 
     await deleteOnCloudinary(video.videoFile, "video");
     await deleteOnCloudinary(video.thumbnail, "image"); 
-
-    await Video.deleteOne({_id: videoId})
 
     return res
     .status(200)

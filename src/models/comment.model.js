@@ -3,16 +3,19 @@ import mongoose, { Schema } from "mongoose";
 const commentSchema = new Schema({
     content: {
         type: String,
-        trim: true
+        trim: true,
+        require: true
     },
     video: {
-        type: mongoose.Types.ObjectId,
-        ref: "Video"
+        type: Schema.Types.ObjectId,
+        ref: "Video",
+        require: true
     },
-    owner:{
-        type: mongoose.Types.ObjectId,
-        ref: "User"
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        require: true
     }
-}, {timestamps: true})
+}, { timestamps: true })
 
-export const Comment = mongoose.Model("Comment", commentSchema);
+export const Comment = mongoose.model("Comment", commentSchema);

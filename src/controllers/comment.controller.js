@@ -74,6 +74,16 @@ const deleteComment = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid or missing comment ID");
     }
 
+    const commentObj = await Comment.findById(commentId.trim())
+
+    if (!commentObj) {
+        throw new ApiError(404, "Comment not found");
+    }
+
+    if (commentObj.owner.toString() !== currentUser.toString()) {
+        throw new ApiError(403, "Unauthorized! You can only edit/delete your own comments")
+    }
+
     const deletedComment = await Comment.findByIdAndDelete(commentId)
 
     if (!deletedComment) {

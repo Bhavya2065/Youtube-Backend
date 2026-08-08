@@ -3,10 +3,10 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { addComment, deleteComment, editComment } from "../controllers/comment.controller.js";
 
 const router = Router();
-
-router.route("/v/:id").post(verifyJWT, addComment);
+router.use(verifyJWT)
+router.route("/v/:id").post(addComment);
 router.route("/c/:commentId")
-    .patch(verifyJWT, editComment)
-    .delete(verifyJWT, deleteComment);
+    .patch(editComment)
+    .delete(deleteComment);
 
 export default router;

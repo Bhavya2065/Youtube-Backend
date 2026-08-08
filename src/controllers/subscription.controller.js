@@ -17,7 +17,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
         subscriptionStatus = await Subscription.findOneAndDelete({ subscriber: userId, channel: channelId })
 
         if (!subscriptionStatus) {
-            throw new ApiError(400, "Problem with Delete Subscription");
+            throw new ApiError(500, "Problem with Delete Subscription");
         }
     } else {
         subscriptionStatus = await Subscription.create({
@@ -26,7 +26,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
         })
 
         if (!subscriptionStatus) {
-            throw new ApiError(400, "Something went wrong, No ducument created");
+            throw new ApiError(500, "Something went wrong, No document created");
         }
     }
 

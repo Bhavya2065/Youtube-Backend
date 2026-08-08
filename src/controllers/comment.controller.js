@@ -23,12 +23,12 @@ const addComment = asyncHandler(async (req, res) => {
     })
 
     if (!comment) {
-        throw new ApiError(400, "The comment was added")
+        throw new ApiError(500, "Something went wrong while creating the comment")
     }
 
     return res
-        .status(200)
-        .json(new ApiResponse(200, comment, "The comment was added Successfully"))
+        .status(201)
+        .json(new ApiResponse(201, comment, "The comment was added Successfully"))
 })
 
 const editComment = asyncHandler(async (req, res) => {
@@ -59,7 +59,7 @@ const editComment = asyncHandler(async (req, res) => {
     }, {new: true})
 
     if (!comment) {
-        throw new ApiError(400, "Comment was not Edited");
+        throw new ApiError(500, "Comment was not Edited");
     }
 
     return res
@@ -77,7 +77,7 @@ const deleteComment = asyncHandler(async (req, res) => {
     const deletedComment = await Comment.findByIdAndDelete(commentId)
 
     if (!deletedComment) {
-        throw new ApiError(400, "The comment was not Deleted, Something went wrong")
+        throw new ApiError(500, "The comment was not Deleted, Something went wrong")
     }
 
     return res

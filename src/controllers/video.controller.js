@@ -23,7 +23,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
     const thumbnailCloudinaryResponse = await uploadOnCloudinary(localThumbnailpath);
 
     if (!videoCloudinaryResponse.duration) {
-        throw new ApiError(400, "Video duration not found in Cloudinary Response");
+        throw new ApiError(500, "Video duration not found in Cloudinary Response");
     }
 
     const newVideo = await Video.create({
@@ -38,15 +38,15 @@ const uploadVideo = asyncHandler(async (req, res) => {
     })
 
     if (!newVideo) {
-        throw new ApiError(400, "The data is not Saved in database in video Model")
+        throw new ApiError(500, "The data is not Saved in database in video Model")
     }
 
     const video = await Video.findById(newVideo._id);
 
     return res
-        .status(200)
+        .status(201)
         .json(
-            new ApiResponse(200, video, "The Video Upload Successfully")
+            new ApiResponse(201, video, "The Video Upload Successfully")
         )
 })
 
@@ -76,11 +76,11 @@ const watchVideo = asyncHandler(async (req, res) => {
     }, { new: true }).select("_id views");
 
     if (!user) {
-        throw new ApiError(400, "User Watch History not Update");
+        throw new ApiError(500, "User Watch History not Update");
     }
 
     if (!video) {
-        throw new ApiError(400, "Video count is not Updated");
+        throw new ApiError(500, "Video count is not Updated");
     }
 
     return res
@@ -194,7 +194,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
     const video = await Video.findOneAndDelete({_id: videoId});
 
     if(!video){
-        throw new ApiError(400, "Video not be deleted, Something went wrong");
+        throw new ApiError(500, "Video not be deleted, Something went wrong");
     }
 
     await deleteOnCloudinary(video.videoFile, "video");

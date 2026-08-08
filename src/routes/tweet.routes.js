@@ -9,7 +9,7 @@ router.use(verifyJWT)
 // Tweet Routes
 router.route("/create-post").post(addPost)
 router.route("/view-post/:postId").get(viewPost)
-router.route("/get-post").get(getAllPost)
+router.route("/get-all-post").get(getAllPost)
 router.route("/edit-post/:postId").patch(editPost)
 router.route("/delete-post/:postId").delete(deletePost)
 

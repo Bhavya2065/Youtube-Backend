@@ -73,7 +73,7 @@ const editPost = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Tweet not found");
     }
 
-    if (!(post.owner.toString() === userId)) {
+    if (!(post.owner.toString() === userId.toString())) {
         throw new ApiError(401, "Unauthorize access")
     }
 
@@ -102,7 +102,7 @@ const deletePost = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Tweet not found");
     }
 
-    if (!(post.owner.toString() === userId)) {
+    if (!(post.owner.toString() === userId.toString())) {
         throw new ApiError(401, "Unauthorize access")
     }
 

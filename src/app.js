@@ -30,9 +30,9 @@ app.use("/api/v1/tweets", tweetRouter)
 export default app
 
 /*
-// =========================================================================
-// IMPORTANT NOTE: 
-// =========================================================================
+? =========================================================================
+?  IMPORTANT NOTE: 
+? =========================================================================
 
 1. cors(): Middleware to allow requests from different origins (like your frontend).
 2. express.json(): Middleware to parse incoming requests with JSON data.

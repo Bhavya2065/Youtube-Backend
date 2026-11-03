@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Video
+method: DELETE
+url: '{{videos}}/delete-video/:id'
+order: 5000
+description: 'Delete a video by ID. Requires auth.'
+pathVariables:
+  - key: id
+    value: ''

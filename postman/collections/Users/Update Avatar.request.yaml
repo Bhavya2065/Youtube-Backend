@@ -1,0 +1,12 @@
+$kind: http-request
+name: Update Avatar
+method: PATCH
+url: '{{users}}/update-avatar'
+order: 7000
+description: 'Update user avatar image. Requires auth.'
+body:
+  type: formdata
+  content:
+    - key: avatar
+      type: file
+      src: ''

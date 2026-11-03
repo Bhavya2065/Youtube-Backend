@@ -1,0 +1,9 @@
+$kind: http-request
+name: Watch Video
+method: GET
+url: '{{videos}}/watch/:id'
+order: 2000
+description: 'Watch a video by ID. Increments view count and adds to watch history.'
+pathVariables:
+  - key: id
+    value: ''

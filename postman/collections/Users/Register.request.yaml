@@ -1,0 +1,27 @@
+$kind: http-request
+name: Register
+method: POST
+url: '{{users}}/register'
+order: 1000
+description: 'Register a new user. Requires avatar file. coverImage is optional.'
+body:
+  type: formdata
+  content:
+    - key: fullName
+      type: text
+      value: ''
+    - key: email
+      type: text
+      value: ''
+    - key: username
+      type: text
+      value: ''
+    - key: password
+      type: text
+      value: ''
+    - key: avatar
+      type: file
+      src: ''
+    - key: coverImage
+      type: file
+      src: ''

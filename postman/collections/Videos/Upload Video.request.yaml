@@ -1,0 +1,24 @@
+$kind: http-request
+name: Upload Video
+method: POST
+url: '{{videos}}/upload-video'
+order: 1000
+description: 'Upload a new video with thumbnail. Requires auth.'
+body:
+  type: formdata
+  content:
+    - key: video
+      type: file
+      src: ''
+    - key: thumbnail
+      type: file
+      src: ''
+    - key: title
+      type: text
+      value: ''
+    - key: description
+      type: text
+      value: ''
+    - key: isPublished
+      type: text
+      value: 'true'

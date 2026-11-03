@@ -1,0 +1,9 @@
+$kind: http-request
+name: View Post
+method: GET
+url: '{{tweets}}/view-post/:postId'
+order: 2000
+description: 'View a single tweet/post by ID. Requires auth.'
+pathVariables:
+  - key: postId
+    value: ''

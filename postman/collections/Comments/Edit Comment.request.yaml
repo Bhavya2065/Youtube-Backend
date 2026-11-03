@@ -1,0 +1,15 @@
+$kind: http-request
+name: Edit Comment
+method: PATCH
+url: '{{comments}}/c/:commentId'
+order: 2000
+description: 'Edit your own comment. Requires auth. Only comment owner can edit.'
+pathVariables:
+  - key: commentId
+    value: ''
+body:
+  type: json
+  content: |-
+    {
+      "comment": ""
+    }

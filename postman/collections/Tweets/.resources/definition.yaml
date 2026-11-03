@@ -1,0 +1,3 @@
+$kind: collection
+name: Tweets
+description: 'Tweet/Post APIs - create, view, edit, delete posts.'

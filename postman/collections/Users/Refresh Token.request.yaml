@@ -1,0 +1,6 @@
+$kind: http-request
+name: Refresh Token
+method: POST
+url: '{{users}}/refresh-token'
+order: 4000
+description: 'Refresh the access token using the refresh token from cookies.'

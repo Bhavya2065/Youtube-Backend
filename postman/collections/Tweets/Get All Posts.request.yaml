@@ -1,0 +1,6 @@
+$kind: http-request
+name: Get All Posts
+method: GET
+url: '{{tweets}}/get-all-post'
+order: 3000
+description: 'Get all tweets/posts by the current logged-in user. Requires auth.'

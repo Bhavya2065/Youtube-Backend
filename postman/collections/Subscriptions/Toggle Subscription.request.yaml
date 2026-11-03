@@ -1,0 +1,9 @@
+$kind: http-request
+name: Toggle Subscription
+method: POST
+url: '{{subscriptions}}/c/:channelId'
+order: 1000
+description: 'Toggle subscription to a channel. If already subscribed, unsubscribes. If not, subscribes. Requires auth.'
+pathVariables:
+  - key: channelId
+    value: ''

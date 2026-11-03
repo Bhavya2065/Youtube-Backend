@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Post
+method: DELETE
+url: '{{tweets}}/delete-post/:postId'
+order: 5000
+description: 'Delete your own tweet/post. Only owner can delete. Requires auth.'
+pathVariables:
+  - key: postId
+    value: ''

@@ -1,0 +1,3 @@
+$kind: collection
+name: Subscriptions
+description: 'Subscription APIs - subscribe/unsubscribe to channels.'

@@ -1,0 +1,12 @@
+$kind: http-request
+name: Update Cover Image
+method: PATCH
+url: '{{users}}/update-coverImage'
+order: 8000
+description: 'Update user cover image. Requires auth.'
+body:
+  type: formdata
+  content:
+    - key: coverImage
+      type: file
+      src: ''

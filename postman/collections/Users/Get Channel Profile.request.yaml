@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get Channel Profile
+method: GET
+url: '{{users}}/u/:username'
+order: 10000
+description: "Get a user's channel profile by username. Returns subscriber count, isSubscribed, etc."
+pathVariables:
+  - key: username
+    value: ''

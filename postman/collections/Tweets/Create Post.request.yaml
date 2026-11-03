@@ -1,0 +1,12 @@
+$kind: http-request
+name: Create Post
+method: POST
+url: '{{tweets}}/create-post'
+order: 1000
+description: 'Create a new tweet/post. Requires auth.'
+body:
+  type: json
+  content: |-
+    {
+      "content": ""
+    }

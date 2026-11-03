@@ -1,0 +1,14 @@
+$kind: http-request
+name: Login
+method: POST
+url: '{{users}}/login'
+order: 2000
+description: 'Login with username or email + password. Returns accessToken and refreshToken in cookies.'
+body:
+  type: json
+  content: |-
+    {
+      "username": "",
+      "email": "",
+      "password": ""
+    }

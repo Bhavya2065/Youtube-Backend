@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Comment
+method: DELETE
+url: '{{comments}}/c/:commentId'
+order: 3000
+description: 'Delete your own comment. Requires auth. Only comment owner can delete.'
+pathVariables:
+  - key: commentId
+    value: ''

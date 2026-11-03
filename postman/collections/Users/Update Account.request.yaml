@@ -1,0 +1,13 @@
+$kind: http-request
+name: Update Account
+method: PATCH
+url: '{{users}}/update-account'
+order: 6000
+description: 'Update fullName and/or email. Requires auth.'
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "",
+      "email": ""
+    }

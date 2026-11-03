@@ -1,0 +1,15 @@
+$kind: http-request
+name: Edit Post
+method: PATCH
+url: '{{tweets}}/edit-post/:postId'
+order: 4000
+description: 'Edit your own tweet/post. Only owner can edit. Requires auth.'
+pathVariables:
+  - key: postId
+    value: ''
+body:
+  type: json
+  content: |-
+    {
+      "content": ""
+    }

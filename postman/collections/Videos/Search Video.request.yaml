@@ -1,0 +1,9 @@
+$kind: http-request
+name: Search Video
+method: GET
+url: '{{videos}}/search-query/:query'
+order: 4000
+description: 'Search videos by query string. Requires auth.'
+pathVariables:
+  - key: query
+    value: ''

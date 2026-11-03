@@ -1,0 +1,22 @@
+name: YouTube Backend
+values:
+  - key: users
+    value: 'http://localhost:8000/api/v1/users'
+    type: default
+    enabled: true
+  - key: videos
+    value: 'http://localhost:8000/api/v1/videos'
+    type: default
+    enabled: true
+  - key: subscriptions
+    value: 'http://localhost:8000/api/v1/subscriptions'
+    type: default
+    enabled: true
+  - key: comments
+    value: 'http://localhost:8000/api/v1/comments'
+    type: default
+    enabled: true
+  - key: tweets
+    value: 'http://localhost:8000/api/v1/tweets'
+    type: default
+    enabled: true

@@ -1,0 +1,15 @@
+$kind: http-request
+name: Add Comment
+method: POST
+url: '{{comments}}/v/:id'
+order: 1000
+description: 'Add a comment to a video. Requires auth.'
+pathVariables:
+  - key: id
+    value: ''
+body:
+  type: json
+  content: |-
+    {
+      "comment": ""
+    }
